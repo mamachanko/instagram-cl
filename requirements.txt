@@ -1,0 +1,14 @@
+Flask==0.10.1
+Jinja2==2.7.1
+MarkupSafe==0.18
+PyYAML==3.10
+Werkzeug==0.9.4
+argh==0.23.3
+ipdb==0.8
+ipython==1.1.0
+itsdangerous==0.23
+pathtools==0.1.2
+readline==6.2.4.1
+requests==2.1.0
+watchdog==0.6.0
+wsgiref==0.1.2
