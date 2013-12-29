@@ -1,12 +1,15 @@
 import os
+import json
 import multiprocessing
 import requests
 import webbrowser
 import time
+from pprint import pprint
 import sys
 
 from flask import Flask, request
 
+instagram_api = 'https://api.instagram.com/v1'
 client_id = 'c895de4e2dde4f32886ec383d6f39bd8'
 redirect_uri = 'http://localhost:8642/'
 config = {'client_id': client_id,
@@ -63,5 +66,20 @@ def handle_auth_flow():
         time.sleep(1)
 
 
+def get_latest_media(access_token, limit=10):
+    try:
+        with open('./latest_media.json', 'r') as f:
+            latest_media = json.load(f)
+    except IOError:
+        user_feed_url = instagram_api + '/users/self/feed'
+        params = {'access_token': access_token}
+        latest_media_response = requests.get(user_feed_url, params=params)
+        latest_media = latest_media_response.json()
+        with open('./latest_media.json', 'w') as f:
+            json.dump(latest_media, f)
+    return latest_media
+
 if __name__ == '__main__':
-    get_access_token()
+    access_token = get_access_token()
+    latest_media = get_latest_media(access_token)
+    pprint(latest_media)
