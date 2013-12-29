@@ -4,11 +4,16 @@ MarkupSafe==0.18
 PyYAML==3.10
 Werkzeug==0.9.4
 argh==0.23.3
+arrow==0.4.2
 ipdb==0.8
 ipython==1.1.0
 itsdangerous==0.23
 pathtools==0.1.2
+py==1.4.19
+pytest==2.5.1
+python-dateutil==2.2
 readline==6.2.4.1
 requests==2.1.0
+six==1.4.1
 watchdog==0.6.0
 wsgiref==0.1.2

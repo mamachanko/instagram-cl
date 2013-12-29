@@ -1,10 +1,12 @@
+from arrow import Arrow
+import colors
+
 import os
 import json
 import multiprocessing
 import requests
 import webbrowser
 import time
-from pprint import pprint
 import sys
 
 from flask import Flask, request
@@ -14,6 +16,27 @@ client_id = 'c895de4e2dde4f32886ec383d6f39bd8'
 redirect_uri = 'http://localhost:8642/'
 config = {'client_id': client_id,
           'redirect_uri': redirect_uri}
+
+
+class InstagramMedia(object):
+
+    def __init__(self, media_json):
+        self.username = media_json['user']['username']
+        self.created_time = Arrow.utcfromtimestamp(media_json['created_time'])
+
+    def __repr__(self):
+        params = {'class_name': type(self).__name__,
+                  'username': self.username,
+                  'human_time': self.created_time.humanize()}
+        return u'<%(class_name)s by @%(username)s created %(human_time)s>' % params
+
+    def coloured(self):
+        params = {'class_name': type(self).__name__,
+                  'username': colors.red(self.username, bg='white'),
+                  'human_time': self.created_time.humanize()}
+        return u'<%(class_name)s by @%(username)s created %(human_time)s>' % params
+
+
 
 app = Flask(__name__)
 
@@ -66,7 +89,7 @@ def handle_auth_flow():
         time.sleep(1)
 
 
-def get_latest_media(access_token, limit=10):
+def get_latest_media_raw(access_token):
     try:
         with open('./latest_media.json', 'r') as f:
             latest_media = json.load(f)
@@ -77,9 +100,15 @@ def get_latest_media(access_token, limit=10):
         latest_media = latest_media_response.json()
         with open('./latest_media.json', 'w') as f:
             json.dump(latest_media, f)
-    return latest_media
+    return latest_media['data']
+
+
+def get_latest_media(access_token):
+    return map(InstagramMedia, get_latest_media_raw(access_token))
+
 
 if __name__ == '__main__':
     access_token = get_access_token()
     latest_media = get_latest_media(access_token)
-    pprint(latest_media)
+    for media in latest_media:
+        print media.coloured()
