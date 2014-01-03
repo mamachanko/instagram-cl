@@ -1,3 +1,5 @@
 Flask==0.10.1
 arrow==0.4.2
 python-instagram==0.8.0
+Pillow==2.2.2
+requests==2.1.0
