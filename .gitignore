@@ -1,9 +1,6 @@
 # access token file
 access_token.txt
 
-# latest media json file
-latest_media.json
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
