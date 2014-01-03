@@ -27,7 +27,3 @@ class TestInstagramMedia:
         instagram_media = InstagramMedia(media_sample)
         assert repr(instagram_media) == '<InstagramMedia by @sugardubz created %s>' % instagram_media.created_time.humanize()
 
-    def test_representation_coloured(self):
-        instagram_media = InstagramMedia(media_sample)
-        media_repr_regex = re.compile('\<InstagramMedia by .*sugardubz.* created .*\>')
-        assert media_repr_regex.match(instagram_media.coloured()), instagram_media.coloured()
