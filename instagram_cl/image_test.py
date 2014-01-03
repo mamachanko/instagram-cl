@@ -1,6 +1,9 @@
-from PIL import Image
-import random
 from bisect import bisect
+import os
+import random
+
+from PIL import Image
+import requests
 
 
 class AsciiImage(object):
@@ -74,22 +77,6 @@ class AsciiImage(object):
         return map(to_hex, image.getpixel((x, y)))
 
 
-import requests
-import os
-
-image_path = './image.jpg'
-
-if not os.path.exists(image_path):
-    image_url = 'http://distilleryimage8.s3.amazonaws.com/1ce4f0ce601311e39afc122e3f5a0d70_5.jpg'
-    image_url = 'http://distilleryimage1.s3.amazonaws.com/2ce35b8a720811e38fee129d6d056cfd_6.jpg'
-    image_url = 'http://distilleryimage8.s3.amazonaws.com/2c5b52b4722911e39d1d0a90bdc567e4_8.jpg'
-    r = requests.get(image_url, stream=True)
-    if r.status_code == 200:
-        with open(image_path, 'wb') as f:
-            for chunk in r.iter_content():
-                f.write(chunk)
-
-
 def render_image(ascii_image):
     import urwid
 
@@ -103,7 +90,7 @@ def render_image(ascii_image):
         ('streak', '', '', '', 'g50', background_colour),
         ('background', '', '', '', 'g7', background_colour),]
 
-    palette.extend(generate_image_palette(ascii_image))
+    palette.extend(get_image_palette(ascii_image))
 
     placeholder = urwid.SolidFill()
     loop = urwid.MainLoop(placeholder, palette, unhandled_input=exit_on_q)
@@ -130,7 +117,7 @@ def render_image(ascii_image):
     loop.run()
 
 
-def generate_image_palette(ascii_image):
+def get_image_palette(ascii_image):
     pixel_palette = []
     for x in range(ascii_image.dimensions[0]):
         for y in range(ascii_image.dimensions[1]):
@@ -151,7 +138,6 @@ def get_pixel_row(row, row_number):
 
 
 if __name__ == '__main__':
-    # print '\n\n%$#@!'
+    image_path = './test/image.jpg'
     ascii_image = AsciiImage(image_path, width=100)
-    # print ascii_image
     render_image(ascii_image)
