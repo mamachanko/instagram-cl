@@ -1,6 +1,3 @@
-from arrow import Arrow
-import colors
-
 import os
 import json
 import multiprocessing
@@ -10,32 +7,6 @@ import time
 import sys
 
 from flask import Flask, request
-
-instagram_api = 'https://api.instagram.com/v1'
-client_id = 'c895de4e2dde4f32886ec383d6f39bd8'
-redirect_uri = 'http://localhost:8642/'
-config = {'client_id': client_id,
-          'redirect_uri': redirect_uri}
-
-
-class InstagramMedia(object):
-
-    def __init__(self, media_json):
-        self.username = media_json['user']['username']
-        self.created_time = Arrow.utcfromtimestamp(media_json['created_time'])
-
-    def __repr__(self):
-        params = {'class_name': type(self).__name__,
-                  'username': self.username,
-                  'human_time': self.created_time.humanize()}
-        return u'<%(class_name)s by @%(username)s created %(human_time)s>' % params
-
-    def coloured(self):
-        params = {'class_name': type(self).__name__,
-                  'username': colors.red(self.username, bg='white'),
-                  'human_time': self.created_time.humanize()}
-        return u'<%(class_name)s by @%(username)s created %(human_time)s>' % params
-
 
 
 app = Flask(__name__)
