@@ -124,7 +124,7 @@ def get_image_palette(ascii_image):
             pixel_rgb_value = ascii_image.get_rgb_pixel(x, y)
             colour = '#%s' % ''.join(pixel_rgb_value)
             # pixel_palette.append(('%s,%s' % (x, y), '', '', '', 'g50', colour))
-            pixel_palette.append(('%s,%s' % (x, y), '', '', '', colour, colour))
+            pixel_palette.append(('%s,%s' % (x, y), '', '', '', '', colour))
     return pixel_palette
 
 
