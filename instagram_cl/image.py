@@ -13,10 +13,13 @@ class UnicodePixel(object):
 
     @property
     def ansii_sequence(self):
-        return u'\033[48;5;{0}m\033[38;5;{1}m{2}\033[0m'.format(
+        return '\033[48;5;{0}m\033[38;5;{1}m{2}\033[0m'.format(
             self.background_colour,
             self.character_colour,
             self.character)
+
+    def __repr__(self):
+        return self.ansii_sequence
 
 
 class UnicodeImage(object):
@@ -36,7 +39,7 @@ class UnicodeImage(object):
     def _print(self):
         image_array, _ = self.as_array()
         for row in image_array:
-            print ''.join(row)
+            print map(str, row)
 
     def as_array(self):
         pixel_values = []
@@ -58,23 +61,23 @@ class UnicodeImage(object):
 
                 pixel_octet_values = self.get_values_for_pixel_octet(pixel_octet)
                 background_color, text_color, braille_char = pixel_octet_values
+                row.append(UnicodePixel(braille_char, background_color, text_color))
+            #     # if background_colour_before != background_color:
+            #     bg_color_sequence = '\033[48;5;{0}m'.format(background_color)
+            #     row.append(bg_color_sequence)
 
-                # if background_colour_before != background_color:
-                bg_color_sequence = '\033[48;5;{0}m'.format(background_color)
-                row.append(bg_color_sequence)
+            #     # if text_colour_before != text_color:
+            #     sequence = '\033[38;5;{0}m'.format(text_color)
+            #     row.append(sequence)
 
-                # if text_colour_before != text_color:
-                sequence = '\033[38;5;{0}m'.format(text_color)
-                row.append(sequence)
+            #     row.append(braille_char)
+            #     braille_char_row.append(braille_char)
 
-                row.append(braille_char)
-                braille_char_row.append(braille_char)
+            #     background_colour_before, text_colour_before = background_color, text_color
 
-                background_colour_before, text_colour_before = background_color, text_color
-
-            reset_sequence = "\033[0m"
-            row.append(reset_sequence)
-            braille_chars.append(braille_char_row)
+            # reset_sequence = "\033[0m"
+            # row.append(reset_sequence)
+            # braille_chars.append(braille_char_row)
             image_array.append(row)
 
         return image_array, braille_chars
@@ -159,5 +162,5 @@ if __name__ == "__main__":
         image_filename = './test/image.jpg'
 
     image = Image.open(image_filename)
-    braille_image = BrailleImage(image)
-    braille_image._print()
+    unicode_image = UnicodeImage(image)
+    unicode_image._print()
