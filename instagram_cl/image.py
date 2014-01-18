@@ -58,25 +58,13 @@ class UnicodeImage(object):
                     pixel_values.append(pixel)
                     pixel_octet.append(pixel)
 
-                pixel_octet_values = self.get_values_for_pixel_octet(pixel_octet)
+                pixel_octet_values = self.get_values_for_pixel_octet(
+                    pixel_octet)
                 background_color, text_color, braille_char = pixel_octet_values
-                row.append(UnicodePixel(braille_char, background_color, text_color))
-            #     # if background_colour_before != background_color:
-            #     bg_color_sequence = '\033[48;5;{0}m'.format(background_color)
-            #     row.append(bg_color_sequence)
+                row.append(UnicodePixel(braille_char,
+                                        background_color,
+                                        text_color))
 
-            #     # if text_colour_before != text_color:
-            #     sequence = '\033[38;5;{0}m'.format(text_color)
-            #     row.append(sequence)
-
-            #     row.append(braille_char)
-            #     braille_char_row.append(braille_char)
-
-            #     background_colour_before, text_colour_before = background_color, text_color
-
-            # reset_sequence = "\033[0m"
-            # row.append(reset_sequence)
-            # braille_chars.append(braille_char_row)
             image_array.append(row)
 
         return image_array, braille_chars
