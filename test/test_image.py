@@ -1,27 +1,29 @@
 from PIL import Image
 
-from instagram_cl.image import BrailleImage
+from instagram_cl.image import UnicodeImage, UnicodePixel
 
 
-class TestGrayScaleImage:
+class TestUnicodePixel:
 
-    def test_stores_size(self):
-        width = 4
-        height = 8
-        test_image = Image.new('RGB', (width, height))
+    def test_instantiation(self):
+        unicode_pixel = UnicodePixel(u'\u0041',
+                                     background_colour=0,
+                                     character_colour=24)
+        assert unicode_pixel.character == u'\u0041'
+        assert unicode_pixel.background_colour == 0
+        assert unicode_pixel.character_colour == 24
 
-        braille_image = BrailleImage(test_image, width=width)
+    def test_as_ansii_seq(self):
+        unicode_pixel = UnicodePixel(u'\u0041',
+                                     background_colour=0,
+                                     character_colour=24)
+        # assert u'\033[48;5;{0}m\033[38;5;{1}m{2}\033[0m'
+        assert u'\033[48;5;0m\033[38;5;24m\u0041\033[0m' == unicode_pixel.ansii_sequence
 
-        assert braille_image.width == 4
-        assert braille_image.height == 2
 
-    def test_returns_braille_chars(self):
-        width = 4
-        height = 8
-        test_image = Image.new('RGB', (width, height))
+class TestUnicodeImage:
 
-        braille_image = BrailleImage(test_image, width=20)
-        image_array, braille_chars = braille_image.as_array()
-        assert len(braille_chars) == 20
-        assert len(braille_chars[0]) == 20
-
+    def test_fail(self):
+        image_filename = './test/image.jpg'
+        image = Image.open(image_filename)
+        unicode_image = UnicodeImage(image)

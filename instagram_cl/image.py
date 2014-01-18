@@ -4,7 +4,22 @@ import sys
 from PIL import Image, ImageOps
 
 
-class BrailleImage(object):
+class UnicodePixel(object):
+
+    def __init__(self, character, background_colour, character_colour):
+        self.character = character
+        self.background_colour = background_colour
+        self.character_colour = character_colour
+
+    @property
+    def ansii_sequence(self):
+        return u'\033[48;5;{0}m\033[38;5;{1}m{2}\033[0m'.format(
+            self.background_colour,
+            self.character_colour,
+            self.character)
+
+
+class UnicodeImage(object):
     XTERM_GRAY_OFFSET = 232
     ADJUST_FACTOR = 1.5
     SCALE = 256/24.
