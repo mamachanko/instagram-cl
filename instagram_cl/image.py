@@ -36,10 +36,9 @@ class UnicodeImage(object):
         self.image = ImageOps.grayscale(image)
         self.pixels = self.image.load()
 
-    def _print(self):
+    def __repr__(self):
         image_array, _ = self.as_array()
-        for row in image_array:
-            print map(str, row)
+        return '\n'.join(''.join(map(str, row)) for row in image_array)
 
     def as_array(self):
         pixel_values = []
@@ -163,4 +162,4 @@ if __name__ == "__main__":
 
     image = Image.open(image_filename)
     unicode_image = UnicodeImage(image)
-    unicode_image._print()
+    print unicode_image
