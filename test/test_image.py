@@ -28,3 +28,14 @@ class TestUnicodeImage:
         image = Image.open(image_filename)
         unicode_image = UnicodeImage(image)
         print unicode_image
+
+    def test_get_pixel(self):
+        image_filename = './test/image.jpg'
+        image = Image.open(image_filename)
+        unicode_image = UnicodeImage(image)
+        assert isinstance(unicode_image.get_pixel(0, 0), UnicodePixel)
+
+        height, width = unicode_image.array_dimensions
+        assert isinstance(unicode_image.get_pixel(0, 0), UnicodePixel)
+        assert isinstance(unicode_image.get_pixel(height-1, width-1),
+                          UnicodePixel)

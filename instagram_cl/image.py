@@ -37,13 +37,27 @@ class UnicodeImage(object):
         self.pixels = self.image.load()
 
     def __repr__(self):
-        image_array, _ = self.as_array()
-        return '\n'.join(''.join(map(str, row)) for row in image_array)
+        return '\n'.join(''.join(map(str, row)) for row in self.as_array)
 
+    def get_pixel(self, x, y):
+        return self.as_array[x][y]
+
+    @property
+    def array_dimensions(self):
+        image_array = self.as_array
+        return len(image_array), len(image_array[0])
+
+    @property
     def as_array(self):
+        try:
+            return self._image_array
+        except AttributeError:
+            self._image_array = self._as_array()
+            return self._image_array
+
+    def _as_array(self):
         pixel_values = []
         image_array = []
-        braille_chars = []
         for y in range(self.height/4):
             row = []
             braille_char_row = []
@@ -67,7 +81,7 @@ class UnicodeImage(object):
 
             image_array.append(row)
 
-        return image_array, braille_chars
+        return image_array
 
 
     def get_braille_chars(self):
