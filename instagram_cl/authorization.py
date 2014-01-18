@@ -60,7 +60,6 @@ def get_access_token():
         with open(access_token_file, 'r') as f:
             access_token = f.readline()
     except IOError:
-        from oauth_app import handle_oauth_flow
         handle_oauth_flow()
     else:
         return access_token
