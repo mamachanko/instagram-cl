@@ -1,6 +1,22 @@
 from PIL import Image
+import pytest
 
-from instagram_cl.image import UnicodeImage, UnicodePixel
+from instagram_cl.image import UnicodeImage, UnicodePixel, UrwidImage
+
+
+def get_test_image():
+    image_filename = './test/image.jpg'
+    return Image.open(image_filename)
+
+
+@pytest.fixture
+def unicode_image():
+    return UnicodeImage(get_test_image())
+
+
+@pytest.fixture
+def urwid_image():
+    return UrwidImage(get_test_image())
 
 
 class TestUnicodePixel:
@@ -23,19 +39,43 @@ class TestUnicodePixel:
 
 class TestUnicodeImage:
 
-    def test_print(self):
-        image_filename = './test/image.jpg'
-        image = Image.open(image_filename)
-        unicode_image = UnicodeImage(image)
+    def test_print(self, unicode_image):
         print unicode_image
 
-    def test_get_pixel(self):
-        image_filename = './test/image.jpg'
-        image = Image.open(image_filename)
-        unicode_image = UnicodeImage(image)
+    def test_get_pixel(self, unicode_image):
         assert isinstance(unicode_image.get_pixel(0, 0), UnicodePixel)
 
         height, width = unicode_image.array_dimensions
         assert isinstance(unicode_image.get_pixel(0, 0), UnicodePixel)
         assert isinstance(unicode_image.get_pixel(height-1, width-1),
                           UnicodePixel)
+
+
+class TestUrwidImage:
+
+    def test_heritage(self, urwid_image):
+        assert isinstance(urwid_image, UnicodeImage)
+
+    def test_get_pixel_style_topleft(self, urwid_image):
+        pixel_style = urwid_image.get_pixel_style(0, 0)
+        pixel = urwid_image.get_pixel(0, 0)
+        assert ('0,0', '', '', '', 'g46', 'g42') == pixel_style
+
+    def test_get_pixel_style_bottomright(self, urwid_image):
+        height, width = urwid_image.array_dimensions
+        pixel_style = urwid_image.get_pixel_style(height-1, width-1)
+        assert ('30,74', '', '', '', 'g25', 'g8') == pixel_style
+
+    def test_get_palette(self, urwid_image):
+        height, width = urwid_image.array_dimensions
+        palette = urwid_image.get_palette()
+        assert len(palette) == width * height
+        for x in range(height):
+            for y in range(width):
+                pixel_style = urwid_image.get_pixel_style(x, y)
+                assert pixel_style in palette
+
+    def test_get_pixel_row(self, urwid_image):
+        height, width = urwid_image.array_dimensions
+        for x in range(height):
+            urwid_image.get_pixel_row(x)

@@ -1,12 +1,11 @@
 from bisect import bisect
 import os
-import random
 
 from PIL import Image
 import requests
 
 
-def render_image(ascii_image):
+def render_image(unicode_image):
     import urwid
 
     def exit_on_q(key):
@@ -15,11 +14,11 @@ def render_image(ascii_image):
 
     background_colour = '#aaa'
     palette = [
-        # ('banner', '', '', '', '#ffa', '#60d'),
         ('streak', '', '', '', 'g50', background_colour),
-        ('background', '', '', '', 'g7', background_colour),]
+        ('background', '', '', '', 'g7', background_colour)]
 
-    palette.extend(get_image_palette(ascii_image))
+    # ('x, y', '', '', '', character_colour, background_colour)
+    palette.extend(get_image_palette(unicode_image))
 
     placeholder = urwid.SolidFill()
     loop = urwid.MainLoop(placeholder, palette, unhandled_input=exit_on_q)
@@ -27,46 +26,52 @@ def render_image(ascii_image):
     loop.widget = urwid.AttrMap(placeholder, 'background')
     loop.widget.original_widget = urwid.Filler(urwid.Pile([]))
 
-    import string
-    import random
 
-    # div = urwid.Divider()
-    # outside = urwid.AttrMap(div, 'outside')
-    # inside = urwid.AttrMap(div, 'inside')
-    image_rows = []
-    for row_number, row in enumerate(ascii_image.as_array):
-        pixel_row = get_pixel_row(row, row_number)
-        text = urwid.Text(pixel_row, align='center')
-        row = urwid.AttrMap(text, 'streak')
-        image_rows.append(row)
+    # image_rows = []
+    # for row_number, row in enumerate(unicode_image.as_array):
+    #     # pixel_row = get_pixel_row(row, row_number)
+    #     pixels = map(lambda x: x.character, row)
+    #     text = urwid.Text(pixels, align='center')
+    #     # row = urwid.AttrMap(text, 'streak')
+    #     image_rows.append(text)
+
+    # pile = loop.widget.base_widget
+    # for row in image_rows:
+    #     pile.contents.append((row, pile.options()))
+
+
+    pixel_rows = []
+    for row_number, pixel_row in enumerate(unicode_image.as_array):
+        row = []
+        for pixel_number, pixel in enumerate(pixel_row):
+            style_name = '{0},{1}'.format(row_number, pixel_number)
+            row.append((style_name, pixel.character))
+        pixels_text = urwid.Text(row, align='center')
+        pixel_rows.append(pixels_text)
+
+    # debug
+    import arrow
+    pixel_rows.append(urwid.Text(str(arrow.now()), align='center'))
+
     pile = loop.widget.base_widget
-    for row in image_rows:
+    for row in pixel_rows:
         pile.contents.append((row, pile.options()))
 
     loop.run()
 
 
-def get_image_palette(ascii_image):
+def get_image_palette(unicode_image):
     pixel_palette = []
-    for x in range(ascii_image.dimensions[0]):
-        for y in range(ascii_image.dimensions[1]):
-            pixel_rgb_value = ascii_image.get_rgb_pixel(x, y)
-            colour = '#%s' % ''.join(pixel_rgb_value)
-            # pixel_palette.append(('%s,%s' % (x, y), '', '', '', 'g50', colour))
-            pixel_palette.append(('%s,%s' % (x, y), '', '', '', '', colour))
+    for x in range(unicode_image.array_dimensions[0]):
+        for y in range(unicode_image.array_dimensions[1]):
+            style_name = '{0},{1}'.format(x, y)
+            pixel_palette.append((style_name, '', '', '', 'g0', 'g100'))
     return pixel_palette
 
 
-def get_pixel_row(row, row_number):
-    pixel_row = []
-    for x, char in enumerate(row):
-        char = char
-        style = '%s,%s' % (x, row_number)
-        pixel_row.append((style, char))
-    return pixel_row
-
-
 if __name__ == '__main__':
-    image_path = './test/image.jpg'
-    ascii_image = AsciiImage(image_path, width=100)
-    render_image(ascii_image)
+    from image import UnicodeImage
+    image_filename = './test/image.jpg'
+    image = Image.open(image_filename)
+    unicode_image = UnicodeImage(image)
+    render_image(unicode_image)

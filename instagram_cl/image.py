@@ -156,6 +156,27 @@ class UnicodeImage(object):
         return unichr(0x2800 + bits)
 
 
+class UrwidImage(UnicodeImage):
+
+    def get_pixel_style(self, x, y):
+        unicode_pixel = self.get_pixel(x, y)
+        style_name = '{0},{1}'.format(x, y)
+        foreground_colour = int(round((unicode_pixel.character_colour - 231) * (100/24.)))
+        background_colour = int(round((unicode_pixel.background_colour - 231) * (100/24.)))
+        return (style_name,
+                '', '', '',
+                'g{}'.format(foreground_colour),
+                'g{}'.format(background_colour))
+
+    def get_palette(self):
+        palette = []
+        height, width = self.array_dimensions
+        for x in range(height):
+            for y in range(width):
+                palette.append(self.get_pixel_style(x, y))
+        return palette
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         image_filename = sys.argv[1]
