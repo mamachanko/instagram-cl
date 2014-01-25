@@ -61,7 +61,6 @@ class TestUrwidImage:
 
     def test_get_pixel_style_topleft(self, urwid_image):
         pixel_style = urwid_image.get_pixel_style(0, 0)
-        pixel = urwid_image.get_pixel(0, 0)
         assert ('0,0', '', '', '', 'g46', 'g42') == pixel_style
 
     def test_get_pixel_style_bottomright(self, urwid_image):

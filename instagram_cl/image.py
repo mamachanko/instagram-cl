@@ -63,7 +63,6 @@ class UnicodeImage(object):
         image_array = []
         for y in range(self.height/4):
             row = []
-            braille_char_row = []
             background_colour_before, text_colour_before = None, None
             for x in range(self.width/2):
 
@@ -85,7 +84,6 @@ class UnicodeImage(object):
             image_array.append(row)
 
         return image_array
-
 
     def get_braille_chars(self):
         pass

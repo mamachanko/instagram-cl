@@ -1,4 +1,3 @@
-import arrow
 import urwid
 
 instagram_blue = '#04a'
@@ -6,7 +5,7 @@ palette = [('banner', '', '', '', '#ffa', instagram_blue),
            ('streak', '', '', '', 'g50', instagram_blue),
            ('control_bar', '', '', '', 'g38', instagram_blue),
            ('controls', '', '', '', 'g50', instagram_blue),
-           ('background', '', '', '', 'g7', '#ccc'),]
+           ('background', '', '', '', 'g7', '#ccc')]
 
 
 def exit_on_q(key):

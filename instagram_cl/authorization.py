@@ -5,7 +5,7 @@ import time
 import webbrowser
 
 
-from flask import Flask, request
+from flask import Flask
 
 
 client_id = 'c895de4e2dde4f32886ec383d6f39bd8'

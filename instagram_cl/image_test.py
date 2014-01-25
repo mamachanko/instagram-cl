@@ -1,8 +1,4 @@
-from bisect import bisect
-import os
-
 from PIL import Image
-import requests
 
 
 def render_image(unicode_image):
@@ -25,20 +21,6 @@ def render_image(unicode_image):
     loop.screen.set_terminal_properties(colors=256)
     loop.widget = urwid.AttrMap(placeholder, 'background')
     loop.widget.original_widget = urwid.Filler(urwid.Pile([]))
-
-
-    # image_rows = []
-    # for row_number, row in enumerate(unicode_image.as_array):
-    #     # pixel_row = get_pixel_row(row, row_number)
-    #     pixels = map(lambda x: x.character, row)
-    #     text = urwid.Text(pixels, align='center')
-    #     # row = urwid.AttrMap(text, 'streak')
-    #     image_rows.append(text)
-
-    # pile = loop.widget.base_widget
-    # for row in image_rows:
-    #     pile.contents.append((row, pile.options()))
-
 
     pixel_rows = []
     for row_number, pixel_row in enumerate(unicode_image.as_array):
