@@ -65,7 +65,8 @@ def get_image_palette(unicode_image):
     for x in range(unicode_image.array_dimensions[0]):
         for y in range(unicode_image.array_dimensions[1]):
             style_name = '{0},{1}'.format(x, y)
-            pixel_palette.append((style_name, '', '', '', 'g0', 'g100'))
+            # pixel_palette.append((style_name, '', '', '', 'g0', 'g100'))
+            pixel_palette.append(unicode_image.get_pixel_style(x, y))
     return pixel_palette
 
 

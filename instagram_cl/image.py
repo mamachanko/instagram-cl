@@ -42,6 +42,9 @@ class UnicodeImage(object):
     def get_pixel(self, x, y):
         return self.as_array[x][y]
 
+    def get_pixel_row(self, x):
+        return self.as_array[x]
+
     @property
     def array_dimensions(self):
         image_array = self.as_array
@@ -159,14 +162,17 @@ class UnicodeImage(object):
 class UrwidImage(UnicodeImage):
 
     def get_pixel_style(self, x, y):
-        unicode_pixel = self.get_pixel(x, y)
         style_name = '{0},{1}'.format(x, y)
-        foreground_colour = int(round((unicode_pixel.character_colour - 231) * (100/24.)))
-        background_colour = int(round((unicode_pixel.background_colour - 231) * (100/24.)))
-        return (style_name,
-                '', '', '',
-                'g{}'.format(foreground_colour),
-                'g{}'.format(background_colour))
+        foreground_colour, background_colour = self.format_pixel_colours(x, y)
+        return (style_name, '', '', '', foreground_colour, background_colour)
+
+    def format_pixel_colours(self, x, y):
+        unicode_pixel = self.get_pixel(x, y)
+        scaled_foreground = (unicode_pixel.character_colour - 231) * (100/24.)
+        foreground_colour = int(round(scaled_foreground))
+        scaled_background = (unicode_pixel.background_colour - 231) * (100/24.)
+        background_colour = int(round(scaled_background))
+        return 'g{}'.format(foreground_colour), 'g{}'.format(background_colour)
 
     def get_palette(self):
         palette = []

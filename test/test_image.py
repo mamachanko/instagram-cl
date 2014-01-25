@@ -56,6 +56,9 @@ class TestUrwidImage:
     def test_heritage(self, urwid_image):
         assert isinstance(urwid_image, UnicodeImage)
 
+    def test_format_pixel_colours(self, urwid_image):
+        assert ('g46', 'g42') == urwid_image.format_pixel_colours(0, 0)
+
     def test_get_pixel_style_topleft(self, urwid_image):
         pixel_style = urwid_image.get_pixel_style(0, 0)
         pixel = urwid_image.get_pixel(0, 0)
@@ -78,4 +81,5 @@ class TestUrwidImage:
     def test_get_pixel_row(self, urwid_image):
         height, width = urwid_image.array_dimensions
         for x in range(height):
-            urwid_image.get_pixel_row(x)
+            pixel_row = urwid_image.get_pixel_row(x)
+            assert width == len(pixel_row)
