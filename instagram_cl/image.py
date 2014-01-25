@@ -155,7 +155,10 @@ class UnicodeImage(object):
         return .5 < normalised_distance
 
     def dot(self, bits):
-        bits = bits & 0b111 | (bits & 112) >> 0b1 | (bits & 0b1000) << 0b11 | bits & 0b10000000
+        bits = (bits & 0b111) |\
+               (bits & 0b1110000) >> 0b1 |\
+               (bits & 0b1000) << 0b11 |\
+               (bits & 0b10000000)
         return unichr(0x2800 + bits)
 
 
